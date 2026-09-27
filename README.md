@@ -1,6 +1,6 @@
 # Mathematical Descriptions of All Models
 
-**Authors:** Satabarto Sarkar, Prithwineel Paul, Gexiang Zhang, Ferrante Neri, Antonio Ramírez de Arellano Marrero, Agustín Riscos‑Núñez, David Orellana‑Martín
+**Authors:** Satabarto Sarkar, [Prithwineel Paul](https://scholar.google.com/citations?hl=en&user=DYqUKZMAAAAJ&view_op=list_works&sortby=pubdate), [Gexiang Zhang](https://scholar.google.com/citations?user=R2th41cAAAAJ&hl=en), [Ferrante Neri](https://scholar.google.com/citations?user=h0JDq7sAAAAJ&hl=en), [Antonio Ramírez de Arellano Marrero](https://scholar.google.com/citations?user=a9DmsfAAAAAJ&hl=es), [Agustín Riscos‑Núñez](https://scholar.google.com/citations?user=iBOvTD8AAAAJ&hl=es), [David Orellana‑Martín](https://scholar.google.com/citations?user=20vey8cAAAAJ&hl=es)
 
 ---
 
