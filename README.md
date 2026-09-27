@@ -96,7 +96,7 @@ where $\mathbf{h}(t)$ is the output of the unmodified LSTM‑SNP cell (Section 1
 - **Optimizer:** Adam ($\eta = 0.001$)
 - **Loss:** MSE
 - **Epochs:** 100 (with early stopping, patience = 10)
-- **Gradient clipping:** $\|\nabla\|_{\max} = 1.0$
+- **Gradient clipping:** $\Vert \nabla\Vert _{\max} = 1.0$
 - **Runs:** 60 independent runs (different random seeds)
 - **BPTT truncation:** State detached after each sample (truncated BPTT with window = 1)
 
@@ -167,13 +167,13 @@ $$\tilde{\mathbf{x}}(t) = \bigl[x(t),\; y_{\text{fuzzy}}(t)\bigr]^{\top} \in \ma
 
 ### 4.1 Gate‑Level Fuzzy Inference
 
-For each gate $g \in \{r, c, o\}$, given the pre‑activation slice $\mathbf{z}_g \in \mathbb{R}^H$ and the mean membrane potential $\bar{u} = \text{mean}(\mathbf{u}(t{-}1)) \cdot \mathbf{1}_H$:
+For each gate $g \in \lbrace r, c, o\rbrace $, given the pre‑activation slice $\mathbf{z}_g \in \mathbb{R}^H$ and the mean membrane potential $\bar{u} = \text{mean}(\mathbf{u}(t{-}1)) \cdot \mathbf{1}_H$:
 
 #### Gaussian Membership Functions (Fixed)
 
 $$\mu_{\text{low}}(\mathbf{z}_g) = \exp\!\Bigl(-\frac{(\mathbf{z}_g - (-1))^2}{2\sigma^2}\Bigr), \qquad \mu_{\text{high}}(\mathbf{z}_g) = \exp\!\Bigl(-\frac{(\mathbf{z}_g - (+1))^2}{2\sigma^2}\Bigr)$$
 
-where $\sigma \in \{0.25, 0.5, 0.75, 1.0\}$ is a hyperparameter (experiments sweep over all values).
+where $\sigma \in \lbrace 0.25, 0.5, 0.75, 1.0\rbrace $ is a hyperparameter (experiments sweep over all values).
 
 #### Takagi–Sugeno Rules (2 rules, trainable consequents)
 
@@ -193,7 +193,7 @@ $$g(t) = \text{clip}(g_{\text{raw}},\; 0,\; 1)$$
 
 ### 4.2 Trainable Parameters per Gate
 
-Each gate $g \in \{r, c, o\}$ has $2$ rules $\times$ $3$ parameter vectors $\times$ $H$ dimensions $= 6H$ trainable consequent parameters. Total fuzzy parameters: $3 \times 6H = 18H$.
+Each gate $g \in \lbrace r, c, o\rbrace $ has $2$ rules $\times$ $3$ parameter vectors $\times$ $H$ dimensions $= 6H$ trainable consequent parameters. Total fuzzy parameters: $3 \times 6H = 18H$.
 
 ### 4.3 Full Cell Equations
 
@@ -286,7 +286,7 @@ $4$ rules $\times$ $3$ scalar parameters $(a_i, b_i, c_i)$ = **12** trainable pa
 
 ### 7.1 Fuzzy Gate Module (`FuzzyGateType5`)
 
-Each gate $g \in \{r, c, o\}$ uses a standalone `FuzzyGateType5` module:
+Each gate $g \in \lbrace r, c, o\rbrace $ uses a standalone `FuzzyGateType5` module:
 
 $$\mu_{\text{low}}(\mathbf{z}_g) = \exp\!\Bigl(-\frac{(\mathbf{z}_g + 1)^2}{2\sigma^2}\Bigr), \qquad \mu_{\text{high}}(\mathbf{z}_g) = \exp\!\Bigl(-\frac{(\mathbf{z}_g - 1)^2}{2\sigma^2}\Bigr)$$
 
@@ -388,7 +388,7 @@ $$\mathbf{h}_{\text{bw}}(t),\; \mathbf{u}_{\text{bw}}(t) = \text{LSTMSNPCell}_{\
 
 ### 10.2 Output Concatenation
 
-$$\mathbf{h}_{\text{concat}} = \bigl[\mathbf{h}_{\text{fw}}(T) \;\|\; \mathbf{h}_{\text{bw}}(1)\bigr] \in \mathbb{R}^{2H}$$
+$$\mathbf{h}_{\text{concat}} = \bigl[\mathbf{h}_{\text{fw}}(T) \;\Vert \; \mathbf{h}_{\text{bw}}(1)\bigr] \in \mathbb{R}^{2H}$$
 
 $$\hat{y} = \mathbf{w}_{\text{out}}^{\top}\,\mathbf{h}_{\text{concat}} + b_{\text{out}}$$
 
@@ -421,7 +421,7 @@ $$\hat{y} = \mathbf{w}_{\text{out}}^{\top}\,\mathbf{h}(L{-}1) + b_{\text{out}}$$
 |-----------|--------------|
 | Cell | `LSTMSNPCell` (unmodified, consumption bias = 1.0) |
 | Input dimension | $d_{\text{in}} = 1$ |
-| Sequence length | $L \in \{1, 5, 10, 20, 30\}$ |
+| Sequence length | $L \in \lbrace 1, 5, 10, 20, 30\rbrace $ |
 | Hidden units | $H = 8$ |
 | Output layer | `Linear(8, 1)` — applied to the **last** hidden state |
 
@@ -449,7 +449,7 @@ where:
 - $u_{\text{th}} = 0.5$ is the firing threshold
 - $\beta = 0.5$ is the decay factor
 - $V_{\text{reset}} = 0.0$ is the reset potential
-- $\mathbf{S}[t] \in \{0, 1\}$ are binary spikes
+- $\mathbf{S}[t] \in \lbrace 0, 1\rbrace $ are binary spikes
 
 **Surrogate gradient** for backpropagation through the non‑differentiable Heaviside:
 
@@ -457,7 +457,7 @@ $$\frac{\partial \mathbf{S}}{\partial \mathbf{U}} \approx \frac{1}{(1 + \alpha|\
 
 ### 12.2 Spike‑Driven Self‑Attention (SDSA)
 
-Given spike input $\mathbf{S} \in \{0,1\}^{B \times T \times D}$:
+Given spike input $\mathbf{S} \in \lbrace 0,1\rbrace ^{B \times T \times D}$:
 
 **Step 1 — Linear projections (float‑point):**
 $$\mathbf{Q} = \mathbf{S}\,\mathbf{W}_Q, \quad \mathbf{K} = \mathbf{S}\,\mathbf{W}_K, \quad \mathbf{V} = \mathbf{S}\,\mathbf{W}_V$$
@@ -468,7 +468,7 @@ $$\mathbf{Q}_S = \text{SN}(\mathbf{Q}), \quad \mathbf{K}_S = \text{SN}(\mathbf{K
 where SN is the LIF neuron (Section 12.1).
 
 **Step 3 — Hadamard product (element‑wise masking):**
-$$\mathbf{QK} = \mathbf{Q}_S \odot \mathbf{K}_S \in \{0,1\}^{B \times T \times D}$$
+$$\mathbf{QK} = \mathbf{Q}_S \odot \mathbf{K}_S \in \lbrace 0,1\rbrace ^{B \times T \times D}$$
 
 > [!NOTE]
 > Since spikes are binary, the Hadamard product $\mathbf{Q}_S \odot \mathbf{K}_S$ is equivalent to a logical AND mask — a spike passes only if both Q and K fire.
@@ -477,7 +477,7 @@ $$\mathbf{QK} = \mathbf{Q}_S \odot \mathbf{K}_S \in \{0,1\}^{B \times T \times D
 $$\mathbf{A} = \sum_{t=1}^{T} \mathbf{QK}_{:, t, :} \in \mathbb{R}^{B \times 1 \times D}$$
 
 **Step 5 — Attention mask via SN:**
-$$\mathbf{M} = \text{SN}(\mathbf{A}) \in \{0,1\}^{B \times 1 \times D}$$
+$$\mathbf{M} = \text{SN}(\mathbf{A}) \in \lbrace 0,1\rbrace ^{B \times 1 \times D}$$
 
 **Step 6 — Gated output:**
 $$\text{SDSA}(\mathbf{S}) = \mathbf{W}_{\text{proj}}\bigl(\mathbf{M} \odot \mathbf{V}_S\bigr)$$
@@ -526,13 +526,13 @@ $$\hat{y} = \text{Linear}_{D \to 1}\!\Bigl(\frac{1}{T}\sum_{t=1}^{T}\mathbf{S}_{
 **Folder:** [`Attention/`](file:///tmp/Fuzzy-LSTM_SNP-Test_LAST60/Attention)
 
 > [!NOTE]
-> Despite the folder name, this model uses the **Pure LSTM** architecture (Section 8) — i.e., `nn.LSTM` — not a custom attention mechanism. The experiments in this folder vary the **lag** (sequence length) parameter across $L \in \{1, 5, 10, 20, 30\}$ to study the effect of input window size on standard LSTM performance.
+> Despite the folder name, this model uses the **Pure LSTM** architecture (Section 8) — i.e., `nn.LSTM` — not a custom attention mechanism. The experiments in this folder vary the **lag** (sequence length) parameter across $L \in \lbrace 1, 5, 10, 20, 30\rbrace $ to study the effect of input window size on standard LSTM performance.
 
 | Component | Specification |
 |-----------|--------------|
 | Cell | `nn.LSTM` (standard PyTorch LSTM) |
 | Input dimension | $d_{\text{in}} = 1$ |
-| Sequence length | $L \in \{1, 5, 10, 20, 30\}$ |
+| Sequence length | $L \in \lbrace 1, 5, 10, 20, 30\rbrace $ |
 | Hidden units | $H = 8$ |
 | Output layer | `Linear(8, 1)` — applied to the **last** hidden state |
 | Stateful | Yes |
@@ -572,10 +572,10 @@ All models share the following experimental protocol:
 | **Loss** | MSE |
 | **Max epochs** | 100 |
 | **Early stopping** | Patience = 10 (on validation RMSE) |
-| **Gradient clipping** | $\|\nabla\|_{\max} = 1.0$ |
+| **Gradient clipping** | $\Vert \nabla\Vert _{\max} = 1.0$ |
 | **Runs** | 60 independent runs per configuration |
 | **BPTT** | Truncated (state detached after each sample) |
-| **Noise robustness** | Gaussian noise at $\{0.5\%, 5\%, 10\%, 15\%\}$ of input std, 10 draws per run |
+| **Noise robustness** | Gaussian noise at $\lbrace 0.5\%, 5\%, 10\%, 15\%\rbrace $ of input std, 10 draws per run |
 
 ### Evaluation Metrics
 
@@ -583,6 +583,6 @@ $$\text{RMSE} = \sqrt{\frac{1}{N}\sum_{i=1}^{N}(y_i - \hat{y}_i)^2}$$
 
 $$\text{MSE} = \frac{1}{N}\sum_{i=1}^{N}(y_i - \hat{y}_i)^2$$
 
-$$\text{NMSE} = \frac{\text{MSE}}{\|\mathbf{y} - \bar{y}\|_2^2}$$
+$$\text{NMSE} = \frac{\text{MSE}}{\Vert \mathbf{y} - \bar{y}\Vert _2^2}$$
 
 where predictions are inverse‑transformed back to the original scale before metric computation.
