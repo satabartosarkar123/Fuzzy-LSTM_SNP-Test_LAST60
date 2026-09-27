@@ -381,9 +381,11 @@ $$\hat{y}(t) = \mathbf{w}_{\text{out}}^{\top}\,\mathbf{h}(t) + b_{\text{out}}$$
 Two independent LSTM‑SNP cells process the input sequence in opposite temporal directions:
 
 **Forward pass** (left‑to‑right, $t = 1, 2, \ldots, T$):
+
 $$\mathbf{h}_{\text{fw}}(t),\; \mathbf{u}_{\text{fw}}(t) = \text{LSTMSNPCell}_{\text{fw}}\bigl(\mathbf{x}(t),\; \mathbf{u}_{\text{fw}}(t{-}1)\bigr)$$
 
 **Backward pass** (right‑to‑left, $t = T, T{-}1, \ldots, 1$):
+
 $$\mathbf{h}_{\text{bw}}(t),\; \mathbf{u}_{\text{bw}}(t) = \text{LSTMSNPCell}_{\text{bw}}\bigl(\mathbf{x}(t),\; \mathbf{u}_{\text{bw}}(t{+}1)\bigr)$$
 
 ### 10.2 Output Concatenation
@@ -460,26 +462,32 @@ $$\frac{\partial \mathbf{S}}{\partial \mathbf{U}} \approx \frac{1}{(1 + \alpha|\
 Given spike input $\mathbf{S} \in \lbrace 0,1\rbrace ^{B \times T \times D}$:
 
 **Step 1 — Linear projections (float‑point):**
+
 $$\mathbf{Q} = \mathbf{S}\,\mathbf{W}_Q, \quad \mathbf{K} = \mathbf{S}\,\mathbf{W}_K, \quad \mathbf{V} = \mathbf{S}\,\mathbf{W}_V$$
 
 **Step 2 — Convert to spike tensors:**
+
 $$\mathbf{Q}_S = \text{SN}(\mathbf{Q}), \quad \mathbf{K}_S = \text{SN}(\mathbf{K}), \quad \mathbf{V}_S = \text{SN}(\mathbf{V})$$
 
 where SN is the LIF neuron (Section 12.1).
 
 **Step 3 — Hadamard product (element‑wise masking):**
+
 $$\mathbf{QK} = \mathbf{Q}_S \odot \mathbf{K}_S \in \lbrace 0,1\rbrace ^{B \times T \times D}$$
 
 > [!NOTE]
 > Since spikes are binary, the Hadamard product $\mathbf{Q}_S \odot \mathbf{K}_S$ is equivalent to a logical AND mask — a spike passes only if both Q and K fire.
 
 **Step 4 — Column sum (temporal aggregation):**
+
 $$\mathbf{A} = \sum_{t=1}^{T} \mathbf{QK}_{:, t, :} \in \mathbb{R}^{B \times 1 \times D}$$
 
 **Step 5 — Attention mask via SN:**
+
 $$\mathbf{M} = \text{SN}(\mathbf{A}) \in \lbrace 0,1\rbrace ^{B \times 1 \times D}$$
 
 **Step 6 — Gated output:**
+
 $$\text{SDSA}(\mathbf{S}) = \mathbf{W}_{\text{proj}}\bigl(\mathbf{M} \odot \mathbf{V}_S\bigr)$$
 
 ### 12.3 Spiking Transformer Block (Membrane Shortcuts)
@@ -491,7 +499,9 @@ $$\mathbf{S}'_l = \text{SN}(\mathbf{U}'_l) \qquad \text{(Eq 10)}$$
 $$\mathbf{S}_l = \text{SN}\bigl(\text{MLP}(\mathbf{S}'_l) + \mathbf{U}'_l\bigr) \qquad \text{(Eq 11: membrane shortcut on MLP)}$$
 
 where the MLP is:
+
 $$\text{MLP}(\mathbf{x}) = \mathbf{W}_2 \,\text{GELU}(\mathbf{W}_1\,\mathbf{x})$$
+
 with $\mathbf{W}_1 \in \mathbb{R}^{D \times D_{\text{ff}}}$, $\mathbf{W}_2 \in \mathbb{R}^{D_{\text{ff}} \times D}$.
 
 > [!TIP]
